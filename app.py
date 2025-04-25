@@ -1,17 +1,64 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from datetime import datetime
 import pandas as pd
+from pm25 import get_pm25_data_from_mysql
 
 app = Flask(__name__)
 
 
 @app.route("/")
 def index():
+    datas, columns = get_pm25_data_from_mysql()
+    # print(datas)
+    return render_template("index.html", datas=datas, columns=columns)
+
+
+@app.route("/books")
+def books_page():
+    books = [
+        {
+            "name": "Python book",
+            "price": 299,
+            "image_url": "https://im2.book.com.tw/image/getImage?i=https://www.books.com.tw/img/CN1/136/11/CN11361197.jpg&v=58096f9ck&w=348&h=348",
+        },
+        {
+            "name": "Java book",
+            "price": 399,
+            "image_url": "https://im1.book.com.tw/image/getImage?i=https://www.books.com.tw/img/001/087/31/0010873110.jpg&v=5f7c475bk&w=348&h=348",
+        },
+        {
+            "name": "C# book",
+            "price": 499,
+            "image_url": "https://im1.book.com.tw/image/getImage?i=https://www.books.com.tw/img/001/036/04/0010360466.jpg&v=62d695bak&w=348&h=348",
+        },
+    ]
+
+    # books = []
+    if books:
+        for key in books:
+            print(key["name"])
+            print(key["price"])
+            print(key["image_url"])
+    else:
+        print("is no any books:")
+
     # return f"<h1>HELLO WORLD</h1><br>{datetime.now()}"
     username = "irving"
     nowtime = datetime.now().strftime("%Y-%m-%d")
+    books = books
     print(username, nowtime)
-    return render_template("index.html", name=username, now=nowtime)
+    return render_template("books.html", name=username, now=nowtime, books=books)
+
+
+@app.route("/bmi")
+def get_bmi():
+    # args => GET
+    height = request.args.get("height")
+    weight = request.args.get("weight")
+
+    bmi = round(eval(weight) / (eval(height) / 100) ** 2, 2)
+
+    return render_template("bmi.html", **locals())
 
 
 @app.route("/pm25-data")
@@ -23,4 +70,5 @@ def get_pm25_data():
     return df1.values.tolist()
 
 
-app.run(debug=True)
+if __name__ == "__main__":
+    app.run(debug=True)

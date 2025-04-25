@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOME</title>
+    <style>
+        body{
+            text-align: center;
+            background-color: black;
+            color: #e4dfdf;
+
+        }
+        .price{
+            color: red;
+        }
+
+        .title{
+            background-color: rgb(92, 159, 235);
+            color: white;
+            padding: 6px;
+        }
+
+        form{
+            background-color: aqua;
+            color: black;
+            padding: 6px;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>{{name}} login</h1>
+    <p>nowtime: {{now}}</p>
+
+    <form action="/bmi">
+        <label for="">height</label>
+        <input type="number" name="height">
+
+        <label for="">weight</label>
+        <input type="number" name="weight">
+       
+        <button type="submit">Start</button>
+
+
+
+    </form>
+    
+    <h3>{{bmi}}</h3>
+
+
+
+
+
+
+    {% if books %}
+    {% for i in books %}
+    <h1 class="title">{{i.name}}</h1>
+    <h3 class="price">{{i.price}}</h3>
+    <img src="{{i.image_url}}" alt="">
+    {% endfor %}
+
+    {% else %}
+    <h1 style="color: red;">is no any books</h1>
+    {% endif %}
+
+
+
+    
+
+    <a href="/pm25-data">pm25-data</a>
+
+</body>
+</html>

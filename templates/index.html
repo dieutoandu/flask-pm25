@@ -7,17 +7,45 @@
     <style>
         body{
             text-align: center;
-            background-color: black;
-            color: #e4dfdf;
+            background-color: rgb(228, 215, 215);
+            
 
         }
-
-
+        table{
+            width: 80%;
+            margin: 0 auto;
+        }
+       
     </style>
 </head>
 <body>
-    <h1>{{name}} login</h1>
-    <p>nowtime: {{now}}</p>
+    <h1>PM2.5</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                {% for col in columns %}
+                <th>{{col}}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in datas %}
+            <tr>
+                {% for data in row %}
+                <td>{{data}}</td>
+                {% endfor %}
+            </tr>
+            
+            {% endfor %}
+        </tbody>
+
+
+
+    </table>
+   
+    
+
+
 
 </body>
 </html>
