@@ -2,6 +2,38 @@ import pandas as pd
 import pymysql
 
 
+def update_db():
+    api_url = "https://data.moenv.gov.tw/api/v2/aqx_p_02?api_key=540e2ca4-41e1-4186-8497-fdd67024ac44&limit=1000&sort=datacreationdate%20desc&format=CSV"
+    sqlstr = """
+        insert ignore into pm25(site,county,pm25,datacreationdate,itemunit )
+        values(%s,%s,%s,%s,%s)
+    """
+    row_count = 0
+    message = ""
+    try:
+        df = pd.read_csv(api_url)
+        df["datacreationdate"] = pd.to_datetime(df["datacreationdate"])
+        df1 = df.dropna()
+        values = df1.values.tolist()
+
+        conn = open_db()
+        cur = conn.cursor()
+        cur.executemany(sqlstr, values)
+        row_count = cur.rowcount
+        conn.commit()
+
+        print(f"new :{row_count}")
+        message = "NEW pass"
+
+    except Exception as e:
+        print(e)
+        message = f"NEW erro {e}"
+    finally:
+        if conn is not None:
+            conn.close()
+    return row_count, message
+
+
 def open_db():
     conn = None
     try:
@@ -36,5 +68,6 @@ def get_pm25_data_from_mysql():
 
 
 if __name__ == "__main__":
-    datas, columns = get_pm25_data_from_mysql()
-    print(columns)
+    # datas, columns = get_pm25_data_from_mysql()
+    # print(columns)
+    print(update_db())
