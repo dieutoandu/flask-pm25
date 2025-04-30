@@ -52,7 +52,7 @@ def get_pm25_data_from_mysql():
     try:
         conn = open_db()
         cur = conn.cursor()
-        # sqlstr = "(select MAX(datacreationdate) from pm25;)"
+        # sqlstr = "select MAX(datacreationdate) from pm25;"
 
         sqlstr = "select * from pm25 where datacreationdate=(select MAX(datacreationdate) from pm25);"
         cur.execute(sqlstr)
