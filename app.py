@@ -37,19 +37,22 @@ def index():
     df = pd.DataFrame(datas, columns=columns)
 
     counties = sorted(df["county"].unique().tolist())
-    print(counties)
+    # print(counties)
 
     county = request.args.get("county", "ALL")
-    datas, columns = get_pm25_data_from_mysql()
-    df = pd.DataFrame(datas, columns=columns)
 
-    if county != "ALL":
+    if county == "ALL":
+        df1 = df.groupby("county")["pm25"].mean().reset_index()
+        x_data = df1["county"].tolist()
+
+    else:
 
         df = df.groupby("county").get_group(county)
-        columns = df.columns.tolist()
-        datas = df.values.tolist()
+        x_data = df["site"].tolist()
 
-    x_data = df["site"].tolist()
+    columns = df.columns.tolist()
+    datas = df.values.tolist()
+
     y_data = df["pm25"].tolist()
 
     return render_template(

@@ -12,7 +12,7 @@
     <h1>PM2.5</h1>
     <h4>{{datas[0][4]}}</h4>
 
-    <div id="main" style="width: 600px;height:400px;"></div>
+    <div id="main" style="width: 800px;height:400px;"></div>
 
 
 
@@ -31,7 +31,7 @@
         <button type="submit"> Start </button>
     </form>
     <div id="chart_data"
-        data-labels="{{x_data | tojson | safe }}" data-values="{{y_data | tojson | safe }}">
+        data-labels='{{x_data | tojson | safe }}' data-values='{{y_data | tojson | safe }}'>
     </div>
     
 
@@ -88,6 +88,13 @@
           xAxis: {
             data: labels
           },
+          dataZoom:[{
+            type:'slider',
+            start:0,
+            end:100
+          }],
+
+
           yAxis: {},
           series: [
             {
