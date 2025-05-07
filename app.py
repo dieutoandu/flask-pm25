@@ -47,6 +47,8 @@ def pm25_data_by_site():
             "site": site,
             "x_data": date.to_list(),
             "y_data": df["pm25"].to_list(),
+            "pm25_max": df["pm25"].max(),
+            "pm25_min": df["pm25"].min(),
         }
 
         result = json.dumps(data, ensure_ascii=False)

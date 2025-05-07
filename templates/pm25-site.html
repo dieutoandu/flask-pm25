@@ -29,21 +29,54 @@
 
     <h3>choice site</h3>
     <select name="site" id="site">
-        <option value="林口">林口</option>
-        <option value="富貴角">富貴角</option>
-
+       
     </select>
     
     <p><button  type="submit" onclick="query()">Start</button></p>
 
+    <h2 id="Sitename"></h2>
+
     <div id="main" style="width: 800px;height:400px;"></div>
+
+    <div id="panel" >
+      <h3 style="color: rgb(236, 51, 19);">Higher : <span class="higher"></span>
+        <br>Lower : <span class="Lower"></span></h3>
+    </div>
    
+    <a href="/">HOME</a>
 
 <script>
 
     const countyEl= document.querySelector('#county');
     const siteEl= document.querySelector("#site");
     const chart1 = echarts.init(document.getElementById('main'));
+
+    updataeSite();
+
+
+    function updataeSite(){
+      let county=countyEl.value;
+        console.log(county);
+        
+        const url=`/pm25-county-site?county=${county}`
+
+        fetch(url)
+        .then(res=>res.json())
+        .then(data=>{
+            console.log(data);
+            siteEl.innerHTML="";
+
+            for(let i=0;i<data.length;i++){
+                const opt=document.createElement("option");
+                opt.value=data[i];
+                opt.textContent=data[i];
+                siteEl.appendChild(opt);
+            }
+            //drawChart(chart1,data.site,data.x_data,data.y_data);
+         
+        });
+    }
+
 
 
     countyEl.addEventListener("change",()=>{
@@ -56,17 +89,17 @@
         .then(res=>res.json())
         .then(data=>{
             console.log(data);
-            //siteEl.innerHTML="";
+            siteEl.innerHTML="";
 
-            // for(let i=0;i<data.length;i++){
-            //     const opt=document.createElement("option");
-            //     opt.value=data[i];
-            //     opt.textContent=data[i];
-            //     siteEl.appendChild(opt);
-            // }
+            for(let i=0;i<data.length;i++){
+                const opt=document.createElement("option");
+                opt.value=data[i];
+                opt.textContent=data[i];
+                siteEl.appendChild(opt);
+            }
 
 
-            drawChart(chart1,data.site,data.x_data,data.y_data);
+            //drawChart(chart1,data.site,data.x_data,data.y_data);
             
         });
 
@@ -80,7 +113,7 @@
         
         var option = {
           title: {
-            text: `${site}PM2.5 matplot`
+            //text: `${site}PM2.5 matplot`
           },
           tooltip: {},
           legend: {
@@ -102,6 +135,9 @@
               name: 'PM25',
               type: 'line',
               smooth: true,
+              itemStyle:{
+                color:'red'
+              },
               data: values
             }
           ]
@@ -114,13 +150,19 @@
     function query(){
         let county=countyEl.value
         let site=siteEl.value
+        
         const url=`/pm25-data-site?county=${county}&site=${site}`
 
+        
+        
         fetch(url)
         .then(res=>res.json())
         .then(data=>{
             console.log(data);
-
+            document.querySelector("#Sitename").innerHTML=` ${county} - ${site}`
+            
+            document.querySelector(".higher").innerHTML=data.pm25_max;
+            document.querySelector(".Lower").innerHTML=data.pm25_min;
 
             drawChart(chart1,data.site,data.x_data,data.y_data);
             
